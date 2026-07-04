@@ -226,6 +226,12 @@ button:focus {
   font-weight: 700;
 }
 
+.status {
+  min-height: 1.4em;
+  color: #0f766e;
+  font-weight: 700;
+}
+
 .qr-output {
   display: grid;
   place-items: center;

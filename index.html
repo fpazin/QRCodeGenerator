@@ -52,7 +52,8 @@
             <p class="hint" data-i18n="privacyHint">
               Seus dados ficam no seu navegador. Nada e enviado para servidor.
             </p>
-            <p id="error-message" class="error" aria-live="polite"></p>
+            <p id="error-message" class="error" aria-live="assertive"></p>
+            <p id="status-message" class="status" aria-live="polite"></p>
           </div>
 
           <div class="panel panel-preview">
@@ -62,6 +63,9 @@
             <div class="preview-actions">
               <button id="download-btn" class="btn" type="button" disabled data-i18n="downloadBtn">
                 Baixar PNG
+              </button>
+              <button id="download-svg-btn" class="btn" type="button" disabled data-i18n="downloadSvgBtn">
+                Baixar SVG
               </button>
               <button id="copy-btn" class="btn" type="button" disabled data-i18n="copyBtn">
                 Copiar Conteudo

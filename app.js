@@ -13,10 +13,13 @@ const i18n = {
     privacyHint: "Seus dados ficam no seu navegador. Nada e enviado para servidor.",
     qrPlaceholder: "Seu QR Code aparecera aqui.",
     downloadBtn: "Baixar PNG",
+    downloadSvgBtn: "Baixar SVG",
     copyBtn: "Copiar Conteudo",
     payloadSummary: "Conteudo gerado",
     footerText: "Open source no GitHub. Licenca MIT.",
     copied: "Conteudo copiado para a area de transferencia.",
+    generated: "QR Code gerado com sucesso.",
+    downloadedSvg: "Arquivo SVG baixado.",
     fields: {
       phone: "Telefone (com codigo do pais)",
       message: "Mensagem (opcional)",
@@ -38,6 +41,7 @@ const i18n = {
       invalidUrl: "Informe uma URL valida.",
       invalidSsid: "Informe o SSID da rede Wi-Fi.",
       invalidPassword: "Informe a senha da rede para o tipo de seguranca escolhido.",
+      weakWifiPassword: "Senha Wi-Fi invalida para o tipo de seguranca selecionado.",
       payloadTooLong: "Conteudo muito grande para um QR legivel. Reduza os dados.",
       unknown: "Nao foi possivel gerar o QR Code."
     }
@@ -56,10 +60,13 @@ const i18n = {
     privacyHint: "Your data stays in your browser. Nothing is sent to a server.",
     qrPlaceholder: "Your QR Code will show up here.",
     downloadBtn: "Download PNG",
+    downloadSvgBtn: "Download SVG",
     copyBtn: "Copy Payload",
     payloadSummary: "Generated content",
     footerText: "Open source on GitHub. MIT license.",
     copied: "Content copied to clipboard.",
+    generated: "QR Code generated successfully.",
+    downloadedSvg: "SVG file downloaded.",
     fields: {
       phone: "Phone number (with country code)",
       message: "Message (optional)",
@@ -81,6 +88,7 @@ const i18n = {
       invalidUrl: "Enter a valid URL.",
       invalidSsid: "Enter the Wi-Fi SSID.",
       invalidPassword: "Enter the network password for the selected security type.",
+      weakWifiPassword: "Invalid Wi-Fi password for the selected security type.",
       payloadTooLong: "Content is too long for a readable QR code. Reduce input size.",
       unknown: "Unable to generate the QR code."
     }
@@ -120,7 +128,9 @@ const payloadEl = document.getElementById("payload-preview");
 const generateBtn = document.getElementById("generate-btn");
 const clearBtn = document.getElementById("clear-btn");
 const downloadBtn = document.getElementById("download-btn");
+const downloadSvgBtn = document.getElementById("download-svg-btn");
 const copyBtn = document.getElementById("copy-btn");
+const statusEl = document.getElementById("status-message");
 const langPtBtn = document.getElementById("lang-pt");
 const langEnBtn = document.getElementById("lang-en");
 
@@ -237,6 +247,15 @@ function escapeWifiText(text) {
   return (text || "").replace(/([\\;,:\"])|\n/g, "\\$1");
 }
 
+function isValidWepPassword(password) {
+  const plainLengths = [5, 13, 16];
+  if (plainLengths.includes(password.length)) {
+    return true;
+  }
+
+  return /^[A-Fa-f0-9]{10}$|^[A-Fa-f0-9]{26}$|^[A-Fa-f0-9]{32}$/.test(password);
+}
+
 function buildPayload(type, values) {
   switch (type) {
     case "whatsapp": {
@@ -278,6 +297,9 @@ function buildPayload(type, values) {
       if (!["http:", "https:"].includes(parsed.protocol)) {
         throw new Error("invalidUrl");
       }
+      if (!parsed.hostname || /\s/.test(normalized)) {
+        throw new Error("invalidUrl");
+      }
       return parsed.toString();
     }
 
@@ -293,6 +315,14 @@ function buildPayload(type, values) {
 
       if (security !== "nopass" && !password) {
         throw new Error("invalidPassword");
+      }
+
+      if (security === "WPA" && (password.length < 8 || password.length > 63)) {
+        throw new Error("weakWifiPassword");
+      }
+
+      if (security === "WEP" && !isValidWepPassword(password)) {
+        throw new Error("weakWifiPassword");
       }
 
       return `WIFI:T:${security};S:${escapeWifiText(ssid)};P:${escapeWifiText(password)};H:${hidden};;`;
@@ -326,13 +356,23 @@ function clearError() {
   errorEl.textContent = "";
 }
 
+function setStatus(messageKey) {
+  statusEl.textContent = t(messageKey);
+}
+
+function clearStatus() {
+  statusEl.textContent = "";
+}
+
 function enablePreviewActions(enabled) {
   downloadBtn.disabled = !enabled;
+  downloadSvgBtn.disabled = !enabled;
   copyBtn.disabled = !enabled;
 }
 
 function onGenerate() {
   clearError();
+  clearStatus();
 
   const type = typeEl.value;
   const values = getFormValues();
@@ -352,12 +392,14 @@ function onGenerate() {
 
     payloadEl.textContent = payload;
     enablePreviewActions(true);
+    setStatus("generated");
   } catch (error) {
     state.currentPayload = "";
     state.currentDataUrl = "";
     payloadEl.textContent = "";
     renderQrPlaceholder();
     enablePreviewActions(false);
+    clearStatus();
 
     if (error instanceof Error) {
       setError(error.message);
@@ -371,6 +413,7 @@ function onGenerate() {
 function onClear() {
   formEl.reset();
   clearError();
+  clearStatus();
   payloadEl.textContent = "";
   state.currentPayload = "";
   state.currentDataUrl = "";
@@ -392,6 +435,31 @@ function onDownload() {
   link.click();
 }
 
+function onDownloadSvg() {
+  if (!state.currentPayload) {
+    return;
+  }
+
+  try {
+    const qr = qrcode(0, "M");
+    qr.addData(state.currentPayload);
+    qr.make();
+    const svg = qr.createSvgTag(8, 2);
+    const blob = new Blob([svg], { type: "image/svg+xml;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const type = typeEl.value;
+    const stamp = new Date().toISOString().slice(0, 10);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `qrcode-${type}-${stamp}.svg`;
+    link.click();
+    URL.revokeObjectURL(url);
+    setStatus("downloadedSvg");
+  } catch {
+    setError("unknown");
+  }
+}
+
 async function onCopy() {
   if (!state.currentPayload) {
     return;
@@ -400,7 +468,7 @@ async function onCopy() {
   try {
     await navigator.clipboard.writeText(state.currentPayload);
     clearError();
-    errorEl.textContent = t("copied");
+    setStatus("copied");
   } catch {
     setError("unknown");
   }
@@ -413,12 +481,14 @@ function setLanguage(lang) {
 
 typeEl.addEventListener("change", () => {
   clearError();
+  clearStatus();
   renderDynamicForm();
 });
 
 generateBtn.addEventListener("click", onGenerate);
 clearBtn.addEventListener("click", onClear);
 downloadBtn.addEventListener("click", onDownload);
+downloadSvgBtn.addEventListener("click", onDownloadSvg);
 copyBtn.addEventListener("click", onCopy);
 langPtBtn.addEventListener("click", () => setLanguage("pt"));
 langEnBtn.addEventListener("click", () => setLanguage("en"));

@@ -8,18 +8,29 @@ const i18n = {
     typeEmail: "Email",
     typeUrl: "URL",
     typeWifi: "Wi-Fi",
+    resolutionLabel: "Resolucao do QR",
     generateBtn: "Gerar QR Code",
     clearBtn: "Limpar",
     privacyHint: "Seus dados ficam no seu navegador. Nada e enviado para servidor.",
     qrPlaceholder: "Seu QR Code aparecera aqui.",
     downloadBtn: "Baixar PNG",
     downloadSvgBtn: "Baixar SVG",
+    printBtn: "Imprimir",
     copyBtn: "Copiar Conteudo",
     payloadSummary: "Conteudo gerado",
     footerText: "Open source no GitHub. Licenca MIT.",
+    privacyTitle: "Privacidade e Dados",
+    privacyLine1: "Nenhuma informacao preenchida e salva neste site.",
+    privacyLine2: "Nenhum payload de QR e enviado para servidor.",
+    privacyLine3: "Nao usamos analytics, rastreadores ou cookies de perfil.",
+    aboutTitle: "Desenvolvedor e Contatos",
+    developerLabel: "Desenvolvido por:",
+    repoLabel: "Repositorio do projeto",
+    linkedinLabel: "LinkedIn:",
     copied: "Conteudo copiado para a area de transferencia.",
     generated: "QR Code gerado com sucesso.",
     downloadedSvg: "Arquivo SVG baixado.",
+    printReady: "Janela de impressao aberta.",
     fields: {
       phone: "Telefone (com codigo do pais)",
       message: "Mensagem (opcional)",
@@ -55,18 +66,29 @@ const i18n = {
     typeEmail: "Email",
     typeUrl: "URL",
     typeWifi: "Wi-Fi",
+    resolutionLabel: "QR resolution",
     generateBtn: "Generate QR Code",
     clearBtn: "Clear",
     privacyHint: "Your data stays in your browser. Nothing is sent to a server.",
     qrPlaceholder: "Your QR Code will show up here.",
     downloadBtn: "Download PNG",
     downloadSvgBtn: "Download SVG",
+    printBtn: "Print",
     copyBtn: "Copy Payload",
     payloadSummary: "Generated content",
     footerText: "Open source on GitHub. MIT license.",
+    privacyTitle: "Privacy and Data",
+    privacyLine1: "No information entered here is saved by this site.",
+    privacyLine2: "No QR payload is sent to any server.",
+    privacyLine3: "We do not use analytics, trackers, or profiling cookies.",
+    aboutTitle: "Developer and Contacts",
+    developerLabel: "Developed by:",
+    repoLabel: "Project repository",
+    linkedinLabel: "LinkedIn:",
     copied: "Content copied to clipboard.",
     generated: "QR Code generated successfully.",
     downloadedSvg: "SVG file downloaded.",
+    printReady: "Print window opened.",
     fields: {
       phone: "Phone number (with country code)",
       message: "Message (optional)",
@@ -117,20 +139,24 @@ const fieldsByType = {
 const state = {
   lang: "pt",
   currentPayload: "",
-  currentDataUrl: ""
+  currentDataUrl: "",
+  currentSvg: "",
+  qrResolution: 1024
 };
 
 const formEl = document.getElementById("dynamic-form");
 const typeEl = document.getElementById("qr-type");
 const errorEl = document.getElementById("error-message");
-const outputEl = document.getElementById("qr-output");
+const frameEl = document.getElementById("qr-frame");
 const payloadEl = document.getElementById("payload-preview");
 const generateBtn = document.getElementById("generate-btn");
 const clearBtn = document.getElementById("clear-btn");
 const downloadBtn = document.getElementById("download-btn");
 const downloadSvgBtn = document.getElementById("download-svg-btn");
+const printBtn = document.getElementById("print-btn");
 const copyBtn = document.getElementById("copy-btn");
 const statusEl = document.getElementById("status-message");
+const qrResolutionEl = document.getElementById("qr-resolution");
 const langPtBtn = document.getElementById("lang-pt");
 const langEnBtn = document.getElementById("lang-en");
 
@@ -150,7 +176,9 @@ function applyI18nText() {
   langEnBtn.classList.toggle("is-active", state.lang === "en");
 
   renderDynamicForm();
-  renderQrPlaceholder();
+  if (!state.currentDataUrl) {
+    renderQrPlaceholder();
+  }
 }
 
 function buildInputField(field) {
@@ -333,19 +361,84 @@ function buildPayload(type, values) {
   }
 }
 
-function generateQrDataUrl(payload) {
+function createQrModel(payload) {
   try {
     const qr = qrcode(0, "M");
     qr.addData(payload);
     qr.make();
-    return qr.createDataURL(8, 2);
+    return qr;
   } catch {
     throw new Error("payloadTooLong");
   }
 }
 
+function getSelectedResolution() {
+  const resolution = Number.parseInt(qrResolutionEl.value, 10);
+  if ([512, 1024, 2048].includes(resolution)) {
+    return resolution;
+  }
+
+  return 1024;
+}
+
+function renderQrDataUrl(qr, resolution) {
+  const quietZoneModules = 4;
+  const moduleCount = qr.getModuleCount();
+  const totalModules = moduleCount + quietZoneModules * 2;
+  const cellSize = Math.max(1, Math.floor(resolution / totalModules));
+  const qrSize = cellSize * totalModules;
+  const offset = Math.floor((resolution - qrSize) / 2);
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
+
+  canvas.width = resolution;
+  canvas.height = resolution;
+
+  if (!ctx) {
+    throw new Error("unknown");
+  }
+
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(0, 0, resolution, resolution);
+  ctx.fillStyle = "#000000";
+
+  for (let row = 0; row < moduleCount; row += 1) {
+    for (let col = 0; col < moduleCount; col += 1) {
+      if (qr.isDark(row, col)) {
+        ctx.fillRect(
+          offset + (col + quietZoneModules) * cellSize,
+          offset + (row + quietZoneModules) * cellSize,
+          cellSize,
+          cellSize
+        );
+      }
+    }
+  }
+
+  return canvas.toDataURL("image/png");
+}
+
+function generateQrDataUrl(payload, resolution) {
+  const qr = createQrModel(payload);
+  return renderQrDataUrl(qr, resolution);
+}
+
+function generateQrSvg(payload) {
+  const qr = createQrModel(payload);
+  return qr.createSvgTag(8, 2);
+}
+
 function renderQrPlaceholder() {
-  outputEl.innerHTML = `<p>${t("qrPlaceholder")}</p>`;
+  frameEl.innerHTML = `<p>${t("qrPlaceholder")}</p>`;
+}
+
+function resetPreview() {
+  payloadEl.textContent = "";
+  state.currentPayload = "";
+  state.currentDataUrl = "";
+  state.currentSvg = "";
+  renderQrPlaceholder();
+  enablePreviewActions(false);
 }
 
 function setError(errorKey) {
@@ -367,7 +460,16 @@ function clearStatus() {
 function enablePreviewActions(enabled) {
   downloadBtn.disabled = !enabled;
   downloadSvgBtn.disabled = !enabled;
+  printBtn.disabled = !enabled;
   copyBtn.disabled = !enabled;
+}
+
+function renderQrImage(dataUrl) {
+  frameEl.innerHTML = "";
+  const img = document.createElement("img");
+  img.src = dataUrl;
+  img.alt = "Generated QR Code";
+  frameEl.appendChild(img);
 }
 
 function onGenerate() {
@@ -379,26 +481,19 @@ function onGenerate() {
 
   try {
     const payload = buildPayload(type, values);
-    const dataUrl = generateQrDataUrl(payload);
+    const dataUrl = generateQrDataUrl(payload, state.qrResolution);
+    const svg = generateQrSvg(payload);
 
     state.currentPayload = payload;
     state.currentDataUrl = dataUrl;
+    state.currentSvg = svg;
 
-    outputEl.innerHTML = "";
-    const img = document.createElement("img");
-    img.src = dataUrl;
-    img.alt = "Generated QR Code";
-    outputEl.appendChild(img);
-
+    renderQrImage(dataUrl);
     payloadEl.textContent = payload;
     enablePreviewActions(true);
     setStatus("generated");
   } catch (error) {
-    state.currentPayload = "";
-    state.currentDataUrl = "";
-    payloadEl.textContent = "";
-    renderQrPlaceholder();
-    enablePreviewActions(false);
+    resetPreview();
     clearStatus();
 
     if (error instanceof Error) {
@@ -414,12 +509,8 @@ function onClear() {
   formEl.reset();
   clearError();
   clearStatus();
-  payloadEl.textContent = "";
-  state.currentPayload = "";
-  state.currentDataUrl = "";
   renderDynamicForm();
-  renderQrPlaceholder();
-  enablePreviewActions(false);
+  resetPreview();
 }
 
 function onDownload() {
@@ -436,16 +527,12 @@ function onDownload() {
 }
 
 function onDownloadSvg() {
-  if (!state.currentPayload) {
+  if (!state.currentSvg) {
     return;
   }
 
   try {
-    const qr = qrcode(0, "M");
-    qr.addData(state.currentPayload);
-    qr.make();
-    const svg = qr.createSvgTag(8, 2);
-    const blob = new Blob([svg], { type: "image/svg+xml;charset=utf-8" });
+    const blob = new Blob([state.currentSvg], { type: "image/svg+xml;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const type = typeEl.value;
     const stamp = new Date().toISOString().slice(0, 10);
@@ -457,6 +544,98 @@ function onDownloadSvg() {
     setStatus("downloadedSvg");
   } catch {
     setError("unknown");
+  }
+}
+
+function buildPrintHtml() {
+  return `<!doctype html>
+  <html>
+    <head>
+      <meta charset="utf-8" />
+      <title>QR Print ${state.qrResolution}x${state.qrResolution}</title>
+      <style>
+        @page { margin: 12mm; }
+        body { margin: 0; font-family: Arial, sans-serif; color: #334155; }
+        .sheet { min-height: calc(100vh - 24mm); display: grid; place-items: center; }
+        .qr { width: min(80vw, 120mm); text-align: center; }
+        .qr img { width: 100%; height: auto; display: block; }
+        .meta { font-size: 10pt; margin-top: 8mm; }
+      </style>
+    </head>
+    <body>
+      <main class="sheet">
+        <section class="qr">
+          <img src="${state.currentDataUrl}" alt="Generated QR Code" />
+          <p class="meta">${state.qrResolution}x${state.qrResolution} | QRCodeGenerator | https://fpazin.github.io/QRCodeGenerator/</p>
+        </section>
+      </main>
+    </body>
+  </html>`;
+}
+
+function onPrint() {
+  if (!state.currentDataUrl) {
+    return;
+  }
+
+  const iframe = document.createElement("iframe");
+  iframe.setAttribute("aria-hidden", "true");
+  iframe.style.position = "fixed";
+  iframe.style.right = "0";
+  iframe.style.bottom = "0";
+  iframe.style.width = "0";
+  iframe.style.height = "0";
+  iframe.style.border = "0";
+  document.body.appendChild(iframe);
+
+  const printDocument = iframe.contentDocument || iframe.contentWindow?.document;
+  if (!printDocument || !iframe.contentWindow) {
+    iframe.remove();
+    setError("unknown");
+    return;
+  }
+
+  let didPrint = false;
+  const removePrintFrame = () => {
+    window.setTimeout(() => iframe.remove(), 250);
+  };
+
+  iframe.contentWindow.addEventListener("afterprint", removePrintFrame, { once: true });
+
+  const printIframe = () => {
+    if (didPrint || !iframe.contentWindow) {
+      return;
+    }
+
+    didPrint = true;
+    iframe.contentWindow.focus();
+    iframe.contentWindow.print();
+    window.setTimeout(() => iframe.remove(), 5000);
+  };
+
+  iframe.onload = printIframe;
+  printDocument.open();
+  printDocument.write(buildPrintHtml());
+  printDocument.close();
+  window.setTimeout(printIframe, 100);
+
+  setStatus("printReady");
+}
+
+function updateResolution() {
+  state.qrResolution = getSelectedResolution();
+
+  if (!state.currentPayload) {
+    return;
+  }
+
+  try {
+    state.currentDataUrl = generateQrDataUrl(state.currentPayload, state.qrResolution);
+    renderQrImage(state.currentDataUrl);
+  } catch (error) {
+    resetPreview();
+    clearStatus();
+    setError(error instanceof Error ? error.message : "unknown");
   }
 }
 
@@ -483,16 +662,21 @@ typeEl.addEventListener("change", () => {
   clearError();
   clearStatus();
   renderDynamicForm();
+  resetPreview();
 });
+
+qrResolutionEl.addEventListener("change", updateResolution);
 
 generateBtn.addEventListener("click", onGenerate);
 clearBtn.addEventListener("click", onClear);
 downloadBtn.addEventListener("click", onDownload);
 downloadSvgBtn.addEventListener("click", onDownloadSvg);
+printBtn.addEventListener("click", onPrint);
 copyBtn.addEventListener("click", onCopy);
 langPtBtn.addEventListener("click", () => setLanguage("pt"));
 langEnBtn.addEventListener("click", () => setLanguage("en"));
 
+qrResolutionEl.value = String(state.qrResolution);
 renderDynamicForm();
 applyI18nText();
 enablePreviewActions(false);

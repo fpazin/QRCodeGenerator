@@ -40,6 +40,13 @@
               <option value="wifi" data-i18n="typeWifi">Wi-Fi</option>
             </select>
 
+            <label for="qr-resolution" data-i18n="resolutionLabel">Resolucao do QR</label>
+            <select id="qr-resolution" name="qr-resolution">
+              <option value="512">512x512</option>
+              <option value="1024" selected>1024x1024</option>
+              <option value="2048">2048x2048</option>
+            </select>
+
             <form id="dynamic-form" novalidate></form>
 
             <div class="actions">
@@ -58,7 +65,9 @@
 
           <div class="panel panel-preview">
             <div id="qr-output" class="qr-output">
-              <p data-i18n="qrPlaceholder">Seu QR Code aparecera aqui.</p>
+              <div id="qr-frame" class="qr-frame">
+                <p data-i18n="qrPlaceholder">Seu QR Code aparecera aqui.</p>
+              </div>
             </div>
             <div class="preview-actions">
               <button id="download-btn" class="btn" type="button" disabled data-i18n="downloadBtn">
@@ -66,6 +75,9 @@
               </button>
               <button id="download-svg-btn" class="btn" type="button" disabled data-i18n="downloadSvgBtn">
                 Baixar SVG
+              </button>
+              <button id="print-btn" class="btn" type="button" disabled data-i18n="printBtn">
+                Imprimir
               </button>
               <button id="copy-btn" class="btn" type="button" disabled data-i18n="copyBtn">
                 Copiar Conteudo
@@ -77,6 +89,37 @@
             </details>
           </div>
         </div>
+      </section>
+
+      <section class="info-grid">
+        <article class="panel">
+          <h2 data-i18n="privacyTitle">Privacidade e Dados</h2>
+          <ul>
+            <li data-i18n="privacyLine1">Nenhuma informacao preenchida e salva neste site.</li>
+            <li data-i18n="privacyLine2">Nenhum payload de QR e enviado para servidor.</li>
+            <li data-i18n="privacyLine3">Nao usamos analytics, rastreadores ou cookies de perfil.</li>
+          </ul>
+        </article>
+        <article class="panel">
+          <h2 data-i18n="aboutTitle">Desenvolvedor e Contatos</h2>
+          <p>
+            <span data-i18n="developerLabel">Desenvolvido por:</span>
+            <strong>Felipe Pazin</strong>
+          </p>
+          <p>
+            <a href="https://github.com/fpazin" target="_blank" rel="noreferrer noopener">GitHub Profile</a>
+            |
+            <a href="https://github.com/fpazin/QRCodeGenerator" target="_blank" rel="noreferrer noopener">
+              <span data-i18n="repoLabel">Repositorio do projeto</span>
+            </a>
+          </p>
+          <p>
+            <span data-i18n="linkedinLabel">LinkedIn:</span>
+            <a href="https://www.linkedin.com/in/felipe-pazin/" target="_blank" rel="noreferrer noopener">
+              linkedin.com/in/felipe-pazin
+            </a>
+          </p>
+        </article>
       </section>
 
       <footer class="footer">

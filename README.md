@@ -19,6 +19,7 @@ Pagina web para gerar QR Codes de forma gratuita, com processamento local no nav
 
 - Gera QR para WhatsApp, Email, URL e Wi-Fi.
 - Download em PNG e SVG.
+- Resolucao configuravel para PNG e impressao: 512x512, 1024x1024 ou 2048x2048.
 - Visualizacao do conteudo gerado.
 - Interface bilingue (PT/EN).
 - Sem backend e sem analytics.
@@ -60,6 +61,7 @@ Passos:
 - Toda geracao de QR ocorre no navegador do usuario.
 - Nao ha envio de dados para API/servidor.
 - Nao ha armazenamento obrigatorio de dados sensiveis.
+- A pagina exibe informacoes de privacidade e links de contato do desenvolvedor.
 
 ### Biblioteca usada
 
@@ -75,6 +77,7 @@ Web page to generate QR Codes for free, fully in the browser.
 
 - QR generation for WhatsApp, Email, URL, and Wi-Fi.
 - PNG and SVG download.
+- Configurable PNG and print resolution: 512x512, 1024x1024, or 2048x2048.
 - Generated payload preview.
 - Bilingual UI (PT/EN).
 - No backend and no analytics.
@@ -116,6 +119,7 @@ Steps:
 - QR generation happens in the user's browser.
 - No payload data is sent to any API/server.
 - No mandatory storage of sensitive data.
+- The page shows privacy information and developer contact links.
 
 ## License
 

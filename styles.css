@@ -239,13 +239,51 @@ button:focus {
   border: 1px dashed #bfdbfe;
   border-radius: 12px;
   min-height: 280px;
-  padding: 14px;
+  padding: 18px;
 }
 
-.qr-output img {
+.qr-frame {
+  width: min(320px, 100%);
+  min-height: 240px;
+  display: grid;
+  place-items: center;
+}
+
+.qr-frame img {
   max-width: 100%;
   height: auto;
   display: block;
+}
+
+.info-grid {
+  margin-top: 20px;
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.info-grid h2 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+}
+
+.info-grid ul {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.info-grid p {
+  margin: 8px 0;
+}
+
+.info-grid a {
+  color: #1d4ed8;
+  text-decoration: none;
+}
+
+.info-grid a:hover {
+  text-decoration: underline;
 }
 
 .payload-box {
@@ -283,6 +321,10 @@ button:focus {
 
 @media (max-width: 860px) {
   .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .info-grid {
     grid-template-columns: 1fr;
   }
 

@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Gerador gratuito de QR Code para WhatsApp, Email, URL e Wi-Fi. Tudo processado localmente no navegador."
+    />
+    <title>QR Code Generator | Free & Local</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="background-orb orb-a"></div>
+    <div class="background-orb orb-b"></div>
+
+    <main class="layout">
+      <header class="hero">
+        <p class="badge" data-i18n="privacyBadge">100% local. Free. No traps.</p>
+        <div class="hero-top">
+          <h1 data-i18n="title">QR Code Generator</h1>
+          <div class="lang-switch" role="group" aria-label="Language selector">
+            <button id="lang-pt" class="lang-btn is-active" type="button">PT</button>
+            <button id="lang-en" class="lang-btn" type="button">EN</button>
+          </div>
+        </div>
+        <p data-i18n="subtitle">
+          Crie QR Codes para WhatsApp, Email, URL e Wi-Fi sem enviar seus dados para nenhum servidor.
+        </p>
+      </header>
+
+      <section class="card">
+        <div class="grid">
+          <div class="panel panel-form">
+            <label for="qr-type" data-i18n="typeLabel">Tipo de QR</label>
+            <select id="qr-type" name="qr-type">
+              <option value="whatsapp" data-i18n="typeWhatsapp">WhatsApp</option>
+              <option value="email" data-i18n="typeEmail">Email</option>
+              <option value="url" data-i18n="typeUrl">URL</option>
+              <option value="wifi" data-i18n="typeWifi">Wi-Fi</option>
+            </select>
+
+            <form id="dynamic-form" novalidate></form>
+
+            <div class="actions">
+              <button id="generate-btn" class="btn primary" type="button" data-i18n="generateBtn">
+                Gerar QR Code
+              </button>
+              <button id="clear-btn" class="btn ghost" type="button" data-i18n="clearBtn">Limpar</button>
+            </div>
+
+            <p class="hint" data-i18n="privacyHint">
+              Seus dados ficam no seu navegador. Nada e enviado para servidor.
+            </p>
+            <p id="error-message" class="error" aria-live="polite"></p>
+          </div>
+
+          <div class="panel panel-preview">
+            <div id="qr-output" class="qr-output">
+              <p data-i18n="qrPlaceholder">Seu QR Code aparecera aqui.</p>
+            </div>
+            <div class="preview-actions">
+              <button id="download-btn" class="btn" type="button" disabled data-i18n="downloadBtn">
+                Baixar PNG
+              </button>
+              <button id="copy-btn" class="btn" type="button" disabled data-i18n="copyBtn">
+                Copiar Conteudo
+              </button>
+            </div>
+            <details class="payload-box">
+              <summary data-i18n="payloadSummary">Conteudo gerado</summary>
+              <pre id="payload-preview"></pre>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <p data-i18n="footerText">Open source no GitHub. Licenca MIT.</p>
+      </footer>
+    </main>
+
+    <script src="lib/qrcode.min.js"></script>
+    <script src="app.js" defer></script>
+  </body>
+</html>

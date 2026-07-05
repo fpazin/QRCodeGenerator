@@ -243,16 +243,27 @@ button:focus {
 }
 
 .qr-frame {
-  width: min(320px, 100%);
+  width: min(420px, 100%);
   min-height: 240px;
   display: grid;
   place-items: center;
 }
 
+.qr-frame.is-barcode {
+  width: min(620px, 100%);
+}
+
 .qr-frame img {
   max-width: 100%;
+  max-height: 360px;
   height: auto;
   display: block;
+}
+
+.field-hint {
+  margin: -8px 0 14px;
+  color: var(--muted);
+  font-size: 0.85rem;
 }
 
 .info-grid {

@@ -1,13 +1,11 @@
-# QR Code Generator
+# QR & Barcode Generator
 
 URL: https://fpazin.github.io/QRCodeGenerator/
 
-Free, open-source QR Code generator for:
+Free, open-source generator for QR Codes and common 1D barcodes:
 
-- WhatsApp
-- Email
-- URL
-- Wi-Fi
+- QR: WhatsApp, Email, URL, and Wi-Fi
+- Barcode: Code 128, GS1-128, EAN-13, UPC-A, ITF-14, and Code 39
 
 No backend. No paid lock-in. No data sent to a server.
 
@@ -15,14 +13,16 @@ No backend. No paid lock-in. No data sent to a server.
 
 ### O que este projeto faz
 
-Página web para gerar QR Codes de forma gratuita, com processamento local no navegador.
+Pagina web para gerar QR Codes e codigos de barras de forma gratuita, com processamento local no navegador.
 
 ### Recursos
 
 - Gera QR para WhatsApp, Email, URL e Wi-Fi.
+- Gera codigos de barras Code 128, GS1-128, EAN-13, UPC-A, ITF-14 e Code 39.
+- GS1-128 guiado para AIs comuns: SSCC (00), GTIN (01), validade (17), lote (10) e serial (21).
 - Download em PNG e SVG.
-- Resolução configurável para PNG e impressão: 512x512, 1024x1024 ou 2048x2048.
-- Visualização do conteúdo gerado.
+- Resolucao configuravel para PNG e impressao: 512x512, 1024x1024 ou 2048x2048.
+- Visualizacao do conteudo gerado.
 - Interface bilingue (PT/EN).
 - Sem backend e sem analytics.
 
@@ -43,29 +43,46 @@ Depois acesse:
 http://localhost:8080
 ```
 
+### Publicar no GitHub Pages (Projeto)
+
+Este repositorio inclui workflow para deploy automatico:
+
+- .github/workflows/deploy-pages.yml
+
+Passos:
+
+1. Envie os arquivos para a branch `main`.
+2. No GitHub, abra Settings > Pages.
+3. Em Build and deployment, selecione Source: GitHub Actions.
+4. Aguarde o workflow "Deploy GitHub Pages" finalizar.
+5. URL esperada: https://fpazin.github.io/QRCodeGenerator/
+
 ### Privacidade
 
-- Toda geração de QR ocorre no navegador do usuário.
-- Não há envio de dados para API/servidor.
-- Não há armazenamento obrigatório de dados sensíveis.
-- A página exibe informações de privacidade e links de contato do desenvolvedor.
+- Toda geracao ocorre no navegador do usuario.
+- Nao ha envio de dados para API/servidor.
+- Nao ha armazenamento obrigatorio de dados sensiveis.
+- A pagina exibe informacoes de privacidade e links de contato do desenvolvedor.
 
-### Biblioteca usada
+### Bibliotecas usadas
 
 - qrcode-generator (MIT)
+- JsBarcode (MIT)
 
 ## EN
 
 ### What this project does
 
-Web page to generate QR Codes for free, fully in the browser.
+Web page to generate QR Codes and barcodes for free, fully in the browser.
 
 ### Features
 
 - QR generation for WhatsApp, Email, URL, and Wi-Fi.
+- Barcode generation for Code 128, GS1-128, EAN-13, UPC-A, ITF-14, and Code 39.
+- Guided GS1-128 support for common AIs: SSCC (00), GTIN (01), expiration (17), lot (10), and serial (21).
 - PNG and SVG download.
 - Configurable PNG and print resolution: 512x512, 1024x1024, or 2048x2048.
-- Generated payload preview.
+- Generated content preview.
 - Bilingual UI (PT/EN).
 - No backend and no analytics.
 
@@ -86,9 +103,23 @@ Then open:
 http://localhost:8080
 ```
 
+### Publish on GitHub Pages (Project site)
+
+This repository includes an automatic deployment workflow:
+
+- .github/workflows/deploy-pages.yml
+
+Steps:
+
+1. Push files to the `main` branch.
+2. In GitHub, open Settings > Pages.
+3. In Build and deployment, set Source to GitHub Actions.
+4. Wait for the "Deploy GitHub Pages" workflow to finish.
+5. Expected URL: https://fpazin.github.io/QRCodeGenerator/
+
 ### Privacy
 
-- QR generation happens in the user's browser.
+- Code generation happens in the user's browser.
 - No payload data is sent to any API/server.
 - No mandatory storage of sensitive data.
 - The page shows privacy information and developer contact links.

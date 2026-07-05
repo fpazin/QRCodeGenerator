@@ -1,5 +1,7 @@
 # QR Code Generator
 
+URL: https://fpazin.github.io/QRCodeGenerator/
+
 Free, open-source QR Code generator for:
 
 - WhatsApp
@@ -13,14 +15,14 @@ No backend. No paid lock-in. No data sent to a server.
 
 ### O que este projeto faz
 
-Pagina web para gerar QR Codes de forma gratuita, com processamento local no navegador.
+Página web para gerar QR Codes de forma gratuita, com processamento local no navegador.
 
 ### Recursos
 
 - Gera QR para WhatsApp, Email, URL e Wi-Fi.
 - Download em PNG e SVG.
-- Resolucao configuravel para PNG e impressao: 512x512, 1024x1024 ou 2048x2048.
-- Visualizacao do conteudo gerado.
+- Resolução configurável para PNG e impressão: 512x512, 1024x1024 ou 2048x2048.
+- Visualização do conteúdo gerado.
 - Interface bilingue (PT/EN).
 - Sem backend e sem analytics.
 
@@ -41,27 +43,12 @@ Depois acesse:
 http://localhost:8080
 ```
 
-### Publicar no GitHub Pages (Projeto)
-
-Este repositorio ja inclui workflow para deploy automatico:
-
-- .github/workflows/deploy-pages.yml
-
-Passos:
-
-1. Envie os arquivos para a branch principal do repositorio.
-2. No GitHub, abra Settings > Pages.
-3. Em Build and deployment, selecione Source: GitHub Actions.
-4. Aguarde o workflow "Deploy GitHub Pages" finalizar.
-5. URL esperada:
-   - https://<seu-usuario>.github.io/QRCodeGenerator/
-
 ### Privacidade
 
-- Toda geracao de QR ocorre no navegador do usuario.
-- Nao ha envio de dados para API/servidor.
-- Nao ha armazenamento obrigatorio de dados sensiveis.
-- A pagina exibe informacoes de privacidade e links de contato do desenvolvedor.
+- Toda geração de QR ocorre no navegador do usuário.
+- Não há envio de dados para API/servidor.
+- Não há armazenamento obrigatório de dados sensíveis.
+- A página exibe informações de privacidade e links de contato do desenvolvedor.
 
 ### Biblioteca usada
 
@@ -98,21 +85,6 @@ Then open:
 ```text
 http://localhost:8080
 ```
-
-### Publish on GitHub Pages (Project site)
-
-This repository already includes an automatic deployment workflow:
-
-- .github/workflows/deploy-pages.yml
-
-Steps:
-
-1. Push files to the main branch.
-2. In GitHub, open Settings > Pages.
-3. In Build and deployment, set Source to GitHub Actions.
-4. Wait for the "Deploy GitHub Pages" workflow to finish.
-5. Expected URL:
-   - https://<your-user>.github.io/QRCodeGenerator/
 
 ### Privacy
 

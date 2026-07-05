@@ -46,20 +46,6 @@ Depois acesse:
 http://localhost:8080
 ```
 
-### Publicar no GitHub Pages (Projeto)
-
-Este repositorio inclui workflow para deploy automatico:
-
-- .github/workflows/deploy-pages.yml
-
-Passos:
-
-1. Envie os arquivos para a branch `main`.
-2. No GitHub, abra Settings > Pages.
-3. Em Build and deployment, selecione Source: GitHub Actions.
-4. Aguarde o workflow "Deploy GitHub Pages" finalizar.
-5. URL esperada: https://fpazin.github.io/QRCodeGenerator/
-
 ### Privacidade
 
 - Toda geracao ocorre no navegador do usuario.
@@ -108,20 +94,6 @@ Then open:
 ```text
 http://localhost:8080
 ```
-
-### Publish on GitHub Pages (Project site)
-
-This repository includes an automatic deployment workflow:
-
-- .github/workflows/deploy-pages.yml
-
-Steps:
-
-1. Push files to the `main` branch.
-2. In GitHub, open Settings > Pages.
-3. In Build and deployment, set Source to GitHub Actions.
-4. Wait for the "Deploy GitHub Pages" workflow to finish.
-5. Expected URL: https://fpazin.github.io/QRCodeGenerator/
 
 ### Privacy
 

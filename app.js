@@ -4,6 +4,9 @@ const i18n = {
     title: "QR & Barcode Generator",
     subtitle: "Crie QR Codes e codigos de barras para WhatsApp, Email, URL, Wi-Fi, varejo e logistica sem enviar seus dados para nenhum servidor.",
     typeLabel: "Tipo de codigo",
+    categoryQr: "QR Code",
+    categoryBarcode: "Codigo de Barras",
+    formatLabel: "Formato",
     typeWhatsapp: "WhatsApp",
     typeEmail: "Email",
     typeUrl: "URL",
@@ -25,6 +28,9 @@ const i18n = {
     copyBtn: "Copiar conteudo",
     payloadSummary: "Conteudo gerado",
     footerText: "Open source no GitHub. Licenca MIT.",
+    themeToDark: "Modo escuro",
+    themeToLight: "Modo claro",
+    themeToggleAria: "Alternar modo claro e escuro",
     privacyTitle: "Privacidade e Dados",
     privacyLine1: "Nenhuma informacao preenchida e salva neste site.",
     privacyLine2: "Nenhum payload de codigo e enviado para servidor.",
@@ -89,6 +95,9 @@ const i18n = {
     title: "QR & Barcode Generator",
     subtitle: "Create QR Codes and barcodes for WhatsApp, Email, URL, Wi-Fi, retail, and logistics without sending your data to any server.",
     typeLabel: "Code type",
+    categoryQr: "QR Code",
+    categoryBarcode: "Barcode",
+    formatLabel: "Format",
     typeWhatsapp: "WhatsApp",
     typeEmail: "Email",
     typeUrl: "URL",
@@ -110,6 +119,9 @@ const i18n = {
     copyBtn: "Copy content",
     payloadSummary: "Generated content",
     footerText: "Open source on GitHub. MIT license.",
+    themeToDark: "Dark mode",
+    themeToLight: "Light mode",
+    themeToggleAria: "Toggle light and dark mode",
     privacyTitle: "Privacy and Data",
     privacyLine1: "No information entered here is saved by this site.",
     privacyLine2: "No code payload is sent to any server.",
@@ -174,6 +186,24 @@ const i18n = {
 const qrTypes = new Set(["whatsapp", "email", "url", "wifi"]);
 const barcodeTypes = new Set(["code128", "gs1-128", "ean13", "upca", "itf14", "code39"]);
 const FNC1 = String.fromCharCode(207);
+const THEME_STORAGE_KEY = "qrCodeGeneratorTheme";
+
+const formatOptionsByCategory = {
+  qr: [
+    { value: "whatsapp", labelKey: "typeWhatsapp" },
+    { value: "email", labelKey: "typeEmail" },
+    { value: "url", labelKey: "typeUrl" },
+    { value: "wifi", labelKey: "typeWifi" }
+  ],
+  barcode: [
+    { value: "code128", labelKey: "typeCode128" },
+    { value: "gs1-128", labelKey: "typeGs1128" },
+    { value: "ean13", labelKey: "typeEan13" },
+    { value: "upca", labelKey: "typeUpca" },
+    { value: "itf14", labelKey: "typeItf14" },
+    { value: "code39", labelKey: "typeCode39" }
+  ]
+};
 
 const fieldsByType = {
   whatsapp: [
@@ -225,6 +255,7 @@ const fieldsByType = {
 
 const state = {
   lang: "pt",
+  theme: "light",
   currentKind: "",
   currentPayload: "",
   currentDataUrl: "",
@@ -234,6 +265,7 @@ const state = {
 };
 
 const formEl = document.getElementById("dynamic-form");
+const categoryEl = document.getElementById("code-category");
 const typeEl = document.getElementById("qr-type");
 const errorEl = document.getElementById("error-message");
 const frameEl = document.getElementById("qr-frame");
@@ -248,6 +280,8 @@ const statusEl = document.getElementById("status-message");
 const qrResolutionEl = document.getElementById("qr-resolution");
 const langPtBtn = document.getElementById("lang-pt");
 const langEnBtn = document.getElementById("lang-en");
+const themeToggleBtn = document.getElementById("theme-toggle");
+const themeLabelEl = document.getElementById("theme-label");
 
 function t(path) {
   return path.split(".").reduce((acc, part) => acc && acc[part], i18n[state.lang]) || path;
@@ -263,11 +297,43 @@ function applyI18nText() {
 
   langPtBtn.classList.toggle("is-active", state.lang === "pt");
   langEnBtn.classList.toggle("is-active", state.lang === "en");
+  themeToggleBtn.setAttribute("aria-label", t("themeToggleAria"));
 
-  renderDynamicForm();
+  renderFormatOptions(true);
   if (!state.currentDataUrl) {
     renderCodePlaceholder();
   }
+}
+
+function updateThemeUi() {
+  document.documentElement.setAttribute("data-theme", state.theme);
+  themeToggleBtn.classList.toggle("is-dark", state.theme === "dark");
+  themeLabelEl.textContent = t(state.theme === "dark" ? "themeToLight" : "themeToDark");
+  themeToggleBtn.setAttribute("aria-label", t("themeToggleAria"));
+}
+
+function getStoredTheme() {
+  try {
+    const storedTheme = window.localStorage.getItem(THEME_STORAGE_KEY);
+    return storedTheme === "dark" ? "dark" : "light";
+  } catch {
+    return "light";
+  }
+}
+
+function setTheme(theme) {
+  state.theme = theme === "dark" ? "dark" : "light";
+  updateThemeUi();
+
+  try {
+    window.localStorage.setItem(THEME_STORAGE_KEY, state.theme);
+  } catch {
+    // Theme persistence is optional; the UI can still switch without storage.
+  }
+}
+
+function toggleTheme() {
+  setTheme(state.theme === "dark" ? "light" : "dark");
 }
 
 function buildInputField(field) {
@@ -336,10 +402,34 @@ function buildInputField(field) {
   return wrapper;
 }
 
+function getSelectedCategory() {
+  return categoryEl.value === "barcode" ? "barcode" : "qr";
+}
+
+function renderFormatOptions(preserveValue) {
+  const category = getSelectedCategory();
+  const currentValue = typeEl.value;
+  const options = formatOptionsByCategory[category];
+
+  typeEl.innerHTML = "";
+
+  options.forEach((optionCfg) => {
+    const option = document.createElement("option");
+    option.value = optionCfg.value;
+    option.textContent = t(optionCfg.labelKey);
+    typeEl.appendChild(option);
+  });
+
+  const hasCurrentValue = options.some((optionCfg) => optionCfg.value === currentValue);
+  typeEl.value = preserveValue && hasCurrentValue ? currentValue : options[0].value;
+
+  renderDynamicForm();
+}
+
 function renderDynamicForm() {
   const selectedType = typeEl.value;
   formEl.innerHTML = "";
-  fieldsByType[selectedType].forEach((field) => {
+  (fieldsByType[selectedType] || []).forEach((field) => {
     formEl.appendChild(buildInputField(field));
   });
 }
@@ -1031,7 +1121,15 @@ async function onCopy() {
 function setLanguage(lang) {
   state.lang = lang;
   applyI18nText();
+  updateThemeUi();
 }
+
+categoryEl.addEventListener("change", () => {
+  clearError();
+  clearStatus();
+  renderFormatOptions(false);
+  resetPreview();
+});
 
 typeEl.addEventListener("change", () => {
   clearError();
@@ -1050,8 +1148,12 @@ printBtn.addEventListener("click", onPrint);
 copyBtn.addEventListener("click", onCopy);
 langPtBtn.addEventListener("click", () => setLanguage("pt"));
 langEnBtn.addEventListener("click", () => setLanguage("en"));
+themeToggleBtn.addEventListener("click", toggleTheme);
 
+state.theme = getStoredTheme();
 qrResolutionEl.value = String(state.qrResolution);
-renderDynamicForm();
+categoryEl.value = "qr";
+renderFormatOptions(false);
 applyI18nText();
+updateThemeUi();
 enablePreviewActions(false);

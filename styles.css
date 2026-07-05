@@ -1,4 +1,5 @@
 :root {
+  color-scheme: light;
   --bg: #f6f7fb;
   --bg-alt: #eef3ff;
   --ink: #172034;
@@ -6,9 +7,71 @@
   --accent: #0f766e;
   --accent-2: #ea580c;
   --surface: #ffffff;
+  --surface-soft: #f8fafc;
+  --surface-glass: rgba(255, 255, 255, 0.92);
+  --card-border: rgba(148, 163, 184, 0.3);
+  --panel-border: #e2e8f0;
+  --field-border: #cbd5e1;
+  --field-bg: #ffffff;
+  --button-bg: #f8fafc;
+  --button-ghost-bg: #ffffff;
+  --preview-bg: linear-gradient(145deg, #f8fafc, #eef2ff);
+  --payload-bg: #f8fafc;
+  --badge-bg: #e0f2fe;
+  --badge-ink: #075985;
+  --badge-border: #bae6fd;
+  --switch-bg: #eff6ff;
+  --switch-border: #bfdbfe;
+  --switch-ink: #1e3a8a;
+  --switch-active: #1d4ed8;
+  --focus: #93c5fd;
+  --link: #1d4ed8;
+  --status: #0f766e;
   --ring: #1d4ed8;
   --error: #be123c;
   --shadow: 0 14px 34px rgba(17, 24, 39, 0.12);
+  --page-bg: radial-gradient(circle at 18% 8%, #dbeafe 0%, transparent 32%),
+    radial-gradient(circle at 95% 84%, #fed7aa 0%, transparent 30%),
+    linear-gradient(150deg, var(--bg) 0%, var(--bg-alt) 100%);
+  --orb-a-bg: #fca5a5;
+  --orb-b-bg: #86efac;
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #121417;
+  --bg-alt: #24211e;
+  --ink: #f4f1ea;
+  --muted: #b9b0a3;
+  --accent: #2dd4bf;
+  --accent-2: #f97316;
+  --surface: #1d2024;
+  --surface-soft: #24282e;
+  --surface-glass: rgba(29, 32, 36, 0.92);
+  --card-border: rgba(185, 176, 163, 0.22);
+  --panel-border: #3a3f46;
+  --field-border: #4b5563;
+  --field-bg: #15181c;
+  --button-bg: #24282e;
+  --button-ghost-bg: #1d2024;
+  --preview-bg: linear-gradient(145deg, #171a1f, #25221e);
+  --payload-bg: #15181c;
+  --badge-bg: #173b37;
+  --badge-ink: #b6f3e8;
+  --badge-border: #23786f;
+  --switch-bg: #24282e;
+  --switch-border: #4b5563;
+  --switch-ink: #f4f1ea;
+  --switch-active: #0f766e;
+  --focus: #5eead4;
+  --link: #67e8f9;
+  --status: #5eead4;
+  --shadow: 0 14px 34px rgba(0, 0, 0, 0.32);
+  --page-bg: radial-gradient(circle at 16% 8%, rgba(45, 212, 191, 0.16) 0%, transparent 32%),
+    radial-gradient(circle at 95% 84%, rgba(249, 115, 22, 0.16) 0%, transparent 30%),
+    linear-gradient(150deg, var(--bg) 0%, var(--bg-alt) 100%);
+  --orb-a-bg: #0f766e;
+  --orb-b-bg: #b45309;
 }
 
 * {
@@ -20,9 +83,7 @@ body {
   min-height: 100vh;
   font-family: "Avenir Next", "Century Gothic", "Trebuchet MS", sans-serif;
   color: var(--ink);
-  background: radial-gradient(circle at 18% 8%, #dbeafe 0%, transparent 32%),
-    radial-gradient(circle at 95% 84%, #fed7aa 0%, transparent 30%),
-    linear-gradient(150deg, var(--bg) 0%, var(--bg-alt) 100%);
+  background: var(--page-bg);
 }
 
 .background-orb {
@@ -37,7 +98,7 @@ body {
 .orb-a {
   width: 240px;
   height: 240px;
-  background: #fca5a5;
+  background: var(--orb-a-bg);
   top: -40px;
   left: -60px;
 }
@@ -45,7 +106,7 @@ body {
 .orb-b {
   width: 280px;
   height: 280px;
-  background: #86efac;
+  background: var(--orb-b-bg);
   right: -80px;
   bottom: -80px;
 }
@@ -63,9 +124,9 @@ body {
 
 .badge {
   display: inline-block;
-  background: #e0f2fe;
-  color: #075985;
-  border: 1px solid #bae6fd;
+  background: var(--badge-bg);
+  color: var(--badge-ink);
+  border: 1px solid var(--badge-border);
   padding: 6px 12px;
   border-radius: 999px;
   font-size: 0.85rem;
@@ -77,6 +138,14 @@ body {
   gap: 16px;
   align-items: center;
   justify-content: space-between;
+}
+
+.hero-controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 h1 {
@@ -92,32 +161,53 @@ h1 {
 
 .lang-switch {
   display: inline-flex;
-  border: 1px solid #bfdbfe;
+  border: 1px solid var(--switch-border);
   border-radius: 999px;
   padding: 4px;
-  background: #eff6ff;
+  background: var(--switch-bg);
 }
 
-.lang-btn {
+.lang-btn,
+.theme-toggle {
   border: none;
   border-radius: 999px;
   background: transparent;
   padding: 8px 12px;
   font-weight: 700;
-  color: #1e3a8a;
+  color: var(--switch-ink);
   cursor: pointer;
 }
 
+.theme-toggle {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  border: 1px solid var(--switch-border);
+  background: var(--switch-bg);
+}
+
+.theme-icon {
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  background: var(--switch-active);
+  box-shadow: inset -4px -3px 0 rgba(255, 255, 255, 0.86);
+}
+
+.theme-toggle.is-dark .theme-icon {
+  box-shadow: inset -5px -3px 0 rgba(18, 20, 23, 0.9);
+}
+
 .lang-btn.is-active {
-  background: #1d4ed8;
+  background: var(--switch-active);
   color: #fff;
 }
 
 .card {
-  background: rgba(255, 255, 255, 0.92);
+  background: var(--surface-glass);
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
-  border: 1px solid rgba(148, 163, 184, 0.3);
+  border: 1px solid var(--card-border);
   border-radius: 20px;
   box-shadow: var(--shadow);
   padding: 24px;
@@ -133,7 +223,7 @@ h1 {
 
 .panel {
   background: var(--surface);
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--panel-border);
   border-radius: 16px;
   padding: 18px;
 }
@@ -149,12 +239,13 @@ select,
 input,
 textarea {
   width: 100%;
-  border: 1px solid #cbd5e1;
+  border: 1px solid var(--field-border);
   border-radius: 10px;
   padding: 10px 12px;
   font: inherit;
   margin-bottom: 14px;
-  background: #fff;
+  background: var(--field-bg);
+  color: var(--ink);
 }
 
 textarea {
@@ -166,7 +257,7 @@ input:focus,
 textarea:focus,
 select:focus,
 button:focus {
-  outline: 3px solid #93c5fd;
+  outline: 3px solid var(--focus);
   outline-offset: 1px;
 }
 
@@ -190,9 +281,9 @@ button:focus {
 }
 
 .btn {
-  border: 1px solid #cbd5e1;
-  background: #f8fafc;
-  color: #0f172a;
+  border: 1px solid var(--field-border);
+  background: var(--button-bg);
+  color: var(--ink);
   font-weight: 700;
   border-radius: 10px;
   padding: 10px 14px;
@@ -206,7 +297,7 @@ button:focus {
 }
 
 .btn.ghost {
-  background: #fff;
+  background: var(--button-ghost-bg);
 }
 
 .btn:disabled {
@@ -228,15 +319,15 @@ button:focus {
 
 .status {
   min-height: 1.4em;
-  color: #0f766e;
+  color: var(--status);
   font-weight: 700;
 }
 
 .qr-output {
   display: grid;
   place-items: center;
-  background: linear-gradient(145deg, #f8fafc, #eef2ff);
-  border: 1px dashed #bfdbfe;
+  background: var(--preview-bg);
+  border: 1px dashed var(--switch-border);
   border-radius: 12px;
   min-height: 280px;
   padding: 18px;
@@ -289,7 +380,7 @@ button:focus {
 }
 
 .info-grid a {
-  color: #1d4ed8;
+  color: var(--link);
   text-decoration: none;
 }
 
@@ -304,8 +395,8 @@ button:focus {
 .payload-box pre {
   white-space: pre-wrap;
   word-break: break-word;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
+  background: var(--payload-bg);
+  border: 1px solid var(--panel-border);
   border-radius: 8px;
   padding: 10px;
   max-height: 220px;
@@ -342,5 +433,9 @@ button:focus {
   .hero-top {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .hero-controls {
+    justify-content: flex-start;
   }
 }

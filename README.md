@@ -19,11 +19,14 @@ Pagina web para gerar QR Codes e codigos de barras de forma gratuita, com proces
 
 - Gera QR para WhatsApp, Email, URL e Wi-Fi.
 - Gera codigos de barras Code 128, GS1-128, EAN-13, UPC-A, ITF-14 e Code 39.
+- Seleciona primeiro a categoria QR Code ou Codigo de Barras e depois o formato especifico.
 - GS1-128 guiado para AIs comuns: SSCC (00), GTIN (01), validade (17), lote (10) e serial (21).
 - Download em PNG e SVG.
 - Resolucao configuravel para PNG e impressao: 512x512, 1024x1024 ou 2048x2048.
 - Visualizacao do conteudo gerado.
 - Interface bilingue (PT/EN).
+- Modo claro/escuro com padrao claro e preferencia salva no navegador.
+- Favicon local em SVG com visual de QR + codigo de barras.
 - Sem backend e sem analytics.
 
 ### Rodar localmente
@@ -79,11 +82,14 @@ Web page to generate QR Codes and barcodes for free, fully in the browser.
 
 - QR generation for WhatsApp, Email, URL, and Wi-Fi.
 - Barcode generation for Code 128, GS1-128, EAN-13, UPC-A, ITF-14, and Code 39.
+- Two-step selection: choose QR Code or Barcode first, then the specific format.
 - Guided GS1-128 support for common AIs: SSCC (00), GTIN (01), expiration (17), lot (10), and serial (21).
 - PNG and SVG download.
 - Configurable PNG and print resolution: 512x512, 1024x1024, or 2048x2048.
 - Generated content preview.
 - Bilingual UI (PT/EN).
+- Light/dark mode with light as the default and saved browser preference.
+- Local SVG favicon combining QR and barcode visuals.
 - No backend and no analytics.
 
 ### Run locally

@@ -7,7 +7,9 @@
       name="description"
       content="Gerador gratuito de QR Code e codigos de barras para WhatsApp, Email, URL, Wi-Fi, EAN, UPC, GS1-128, ITF-14, Code 128 e Code 39. Tudo processado localmente no navegador."
     />
+    <meta name="theme-color" content="#f6f7fb" />
     <title>QR & Barcode Generator | Free & Local</title>
+    <link rel="icon" type="image/svg+xml" href="icon.svg" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
@@ -19,9 +21,15 @@
         <p class="badge" data-i18n="privacyBadge">100% local. Free. No traps.</p>
         <div class="hero-top">
           <h1 data-i18n="title">QR & Barcode Generator</h1>
-          <div class="lang-switch" role="group" aria-label="Language selector">
-            <button id="lang-pt" class="lang-btn is-active" type="button">PT</button>
-            <button id="lang-en" class="lang-btn" type="button">EN</button>
+          <div class="hero-controls">
+            <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle dark mode">
+              <span class="theme-icon" aria-hidden="true"></span>
+              <span id="theme-label" data-i18n="themeToDark">Modo escuro</span>
+            </button>
+            <div class="lang-switch" role="group" aria-label="Language selector">
+              <button id="lang-pt" class="lang-btn is-active" type="button">PT</button>
+              <button id="lang-en" class="lang-btn" type="button">EN</button>
+            </div>
           </div>
         </div>
         <p data-i18n="subtitle">
@@ -32,18 +40,18 @@
       <section class="card">
         <div class="grid">
           <div class="panel panel-form">
-            <label for="qr-type" data-i18n="typeLabel">Tipo de codigo</label>
+            <label for="code-category" data-i18n="typeLabel">Tipo de codigo</label>
+            <select id="code-category" name="code-category">
+              <option value="qr" data-i18n="categoryQr">QR Code</option>
+              <option value="barcode" data-i18n="categoryBarcode">Codigo de Barras</option>
+            </select>
+
+            <label for="qr-type" data-i18n="formatLabel">Formato</label>
             <select id="qr-type" name="qr-type">
               <option value="whatsapp" data-i18n="typeWhatsapp">WhatsApp</option>
               <option value="email" data-i18n="typeEmail">Email</option>
               <option value="url" data-i18n="typeUrl">URL</option>
               <option value="wifi" data-i18n="typeWifi">Wi-Fi</option>
-              <option value="code128" data-i18n="typeCode128">Code 128</option>
-              <option value="gs1-128" data-i18n="typeGs1128">GS1-128</option>
-              <option value="ean13" data-i18n="typeEan13">EAN-13</option>
-              <option value="upca" data-i18n="typeUpca">UPC-A</option>
-              <option value="itf14" data-i18n="typeItf14">ITF-14</option>
-              <option value="code39" data-i18n="typeCode39">Code 39</option>
             </select>
 
             <label for="qr-resolution" data-i18n="resolutionLabel">Resolucao do codigo</label>

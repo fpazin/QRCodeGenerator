@@ -1,0 +1,30 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+
+# Local agent/tooling state
+.agents/
+.codex/
+
+# Secrets / local config
+.env
+.env.*
+!.env.example
+
+# Logs / temp files
+*.log
+*.tmp
+*.temp
+*.swp
+*.swo
+*.bak
+
+# Dependency/build artifacts, if tooling is added later
+node_modules/
+dist/
+build/
+.cache/
+coverage/
